@@ -124,6 +124,7 @@ export const formSchema: FormSchema[] = [
     label: t('cms.article.title'),
     component: 'Input',
     required: true,
+    colProps: { span: 24 },
   },
   {
     field: 'shortTitle',
