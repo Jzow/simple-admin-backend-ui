@@ -53,6 +53,7 @@
   import { columns, searchFormSchema } from './article.data';
   import { getArticleList, deleteArticle } from '/@/api/cms/article';
   import { useGo } from '/@/hooks/web/usePage';
+  import { ZERO_UUID } from '/@/enums/commonEnum';
 
   export default defineComponent({
     name: 'ArticleManagement',
@@ -93,7 +94,7 @@
       });
 
       function handleCreate() {
-        go('/cms/article/modify/' + '00000000-0000-0000-0000-000000000000');
+        go('/cms/article/modify/' + ZERO_UUID);
       }
 
       function handleEdit(record: Recordable) {
