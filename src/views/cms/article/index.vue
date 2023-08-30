@@ -3,11 +3,11 @@
     <BasicTable @register="registerTable">
       <template #tableTitle>
         <Button
-                type="primary"
-                danger
-                preIcon="ant-design:delete-outlined"
-                v-if="showDeleteButton"
-                @click="handleBatchDelete()"
+          type="primary"
+          danger
+          preIcon="ant-design:delete-outlined"
+          v-if="showDeleteButton"
+          @click="handleBatchDelete()"
         >
           {{ t('common.delete') }}
         </Button>
@@ -39,7 +39,6 @@
         </template>
       </template>
     </BasicTable>
-    <ArticleDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
@@ -49,22 +48,21 @@
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
   import { Button } from '/@/components/Button';
 
-  import { useDrawer } from '/@/components/Drawer';
-  import ArticleDrawer from './ArticleDrawer.vue';
   import { useI18n } from 'vue-i18n';
 
   import { columns, searchFormSchema } from './article.data';
   import { getArticleList, deleteArticle } from '/@/api/cms/article';
+  import { useGo } from '/@/hooks/web/usePage';
 
   export default defineComponent({
     name: 'ArticleManagement',
-    components: { BasicTable, ArticleDrawer, TableAction, Button },
+    components: { BasicTable, TableAction, Button },
     setup() {
       const { t } = useI18n();
       const selectedIds = ref<number[] | string[]>();
       const showDeleteButton = ref<boolean>(false);
+      const go = useGo();
 
-      const [registerDrawer, { openDrawer }] = useDrawer();
       const [registerTable, { reload }] = useTable({
         title: t('cms.article.articleList'),
         api: getArticleList,
@@ -95,16 +93,11 @@
       });
 
       function handleCreate() {
-        openDrawer(true, {
-          isUpdate: false,
-        });
+        go('/cms/article/modify/' + '00000000-0000-0000-0000-000000000000');
       }
 
       function handleEdit(record: Recordable) {
-        openDrawer(true, {
-          record,
-          isUpdate: true,
-        });
+        go('/cms/article/modify/' + record.id);
       }
 
       async function handleDelete(record: Recordable) {
@@ -138,7 +131,6 @@
       return {
         t,
         registerTable,
-        registerDrawer,
         handleCreate,
         handleEdit,
         handleDelete,

@@ -146,7 +146,7 @@ export const formSchema: FormSchema[] = [
   {
     field: 'content',
     label: t('cms.article.content'),
-    component: 'Input',
+    component: 'Tinymce',
     required: true,
   },
   {
@@ -169,6 +169,7 @@ export const formSchema: FormSchema[] = [
   {
     field: 'categoryId',
     label: t('cms.article.categoryId'),
+    required: true,
     component: 'ApiSelect',
     componentProps: {
       api: getCategoryList,
@@ -185,6 +186,7 @@ export const formSchema: FormSchema[] = [
   {
     field: 'tagIds',
     label: t('cms.article.tagIds'),
+    required: true,
     component: 'ApiMultipleSelect',
     componentProps: {
       api: getTagList,

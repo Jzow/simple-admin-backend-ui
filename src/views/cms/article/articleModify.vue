@@ -6,21 +6,24 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, ref } from 'vue';
+  import { defineComponent, unref } from 'vue';
   import { BasicForm, useForm } from '/@/components/Form';
-  import { useMessage } from '/@/hooks/web/useMessage';
   import { formSchema } from '/@/views/cms/article/article.data';
   import { Card } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { useRouter } from 'vue-router';
+  import { createArticle, getArticleById, updateArticle } from '/@/api/cms/article';
+  import { onMounted } from 'vue';
+  import { ZERO_UUID } from '/@/enums/commonEnum';
 
   export default defineComponent({
     components: { BasicForm, Card },
     setup() {
-      // const { createMessage } = useMessage();
-      const isUpdate = ref(true);
+      const { currentRoute } = useRouter();
+      const articleId = unref(currentRoute).params.articleId;
       const { t } = useI18n();
 
-      const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
+      const [registerForm, { setFieldsValue, validate }] = useForm({
         labelWidth: 90,
         baseColProps: { span: 24 },
         schemas: formSchema,
@@ -31,10 +34,23 @@
         },
       });
 
+      onMounted(async () => {
+        if (articleId != ZERO_UUID) {
+          const result = await getArticleById({ id: articleId as string });
+          if (result.code == 0) {
+            setFieldsValue(result.data);
+          }
+        }
+      });
+
       async function submit(): Promise<void> {
         return new Promise(async function (resolve, reject) {
           const values = await validate();
+          values['id'] = articleId;
           console.log(values);
+          let result =
+            values['id'] != ZERO_UUID ? await updateArticle(values) : await createArticle(values);
+          console.log(result);
           resolve();
         });
       }
